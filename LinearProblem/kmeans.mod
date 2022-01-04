@@ -31,7 +31,7 @@ execute {
 }
 
 // Objective function is to minimize the summation of the euclidian distances ... 
-// ... of each observation to the assigned cluster
+// ... of each observation to the assigned cluster.
 minimize 
 sum(i in M)
 	(sum(j in M) 
