@@ -63,6 +63,11 @@ for i, sg in enumerate(sub_graphs):
 	plt.savefig('Subgraph_'+str(i)+'.png', dpi=150)
 	plt.close()
 
+total_cost = 0
+for node1, node2, weight in edges:
+	total_cost += weight
+
+print("Total Cost of the objective function is: ", total_cost)
 
 print('-----Checking using built in functions of scipy------')
 
