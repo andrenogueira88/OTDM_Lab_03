@@ -31,12 +31,11 @@ execute {
 }
 
 // Objective function is to minimize the summation of the euclidian distances ... 
-// ... of each observation to the assigned cluster. 
-// Divided by 2, once each distance is computed twice: [i][j] and [j][i]
+// ... of each observation to the assigned cluster.
 minimize 
 sum(i in M)
 	(sum(j in M) 
-		(D[i][j]*X[i][j])/2);
+		(D[i][j]*X[i][j]));
 
 subject to {
 	// Constraint 1: Each observation must be assigned to only 1 cluster
