@@ -11,7 +11,7 @@ start_time = time.time()
 
 parser = ArgumentParser(description='OTDM Lab Heuristics')
 parser.add_argument('-c', '--configFile', nargs='?', type=Path,
-					default=Path(__file__).parent / 'Iris_data.dat', help='specifies the config file')
+					default=Path(__file__).parent / 'dermatology.dat', help='specifies the config file')
 args = parser.parse_args()
 config = DATParser.parse(args.configFile)
 
@@ -46,7 +46,7 @@ MST.add_nodes_from(nodes)
 for node1, node2, weight in edges:
 	MST.add_edge(node1, node2, weight=weight)
 nx.draw_networkx(MST, node_size=50, font_size=4)
-plt.savefig('Graph_MST.png', dpi=150)
+plt.savefig('Graph_MST_derm.png', dpi=150)
 plt.close()
 
 # Remove the k-1 edges with largest weights in the MST
@@ -67,14 +67,15 @@ for i, sg in enumerate(sub_graphs):
 	print("\tNodes:", sg.nodes(data=False))
 	print("\tEdges:", sg.edges())
 	pos = nx.spring_layout(sg)
-	c = center(sg)
+	c = []
+	c.append(center(sg)[0])
 	for node in sg.nodes(data=False):
 		total_cost += g.graph[c[0]][node]
 	nx.draw_networkx_nodes(sg, pos, nodelist=set(sg.nodes) - set(c), node_size=50)
 	nx.draw_networkx_edges(sg, pos)
 	nx.draw_networkx_nodes(sg, pos, nodelist=c, node_color='r', node_size=50)
 	nx.draw_networkx_labels(sg, pos, font_size=4)
-	plt.savefig('Subgraph_'+str(i)+'.png', dpi=150)
+	plt.savefig('Subgraph_'+str(i)+'_derm.png', dpi=150)
 	plt.close()
 
 
