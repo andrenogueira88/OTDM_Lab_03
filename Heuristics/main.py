@@ -46,7 +46,7 @@ MST.add_nodes_from(nodes)
 for node1, node2, weight in edges:
 	MST.add_edge(node1, node2, weight=weight)
 nx.draw_networkx(MST, node_size=50, font_size=4)
-plt.savefig('Graph_MST_blob.png', dpi=150)
+plt.savefig('Graph_MST_bloob.png', dpi=150)
 plt.close()
 
 # Remove the k-1 edges with largest weights in the MST
@@ -75,46 +75,35 @@ for i, sg in enumerate(sub_graphs):
 	nx.draw_networkx_edges(sg, pos)
 	nx.draw_networkx_nodes(sg, pos, nodelist=c, node_color='r', node_size=50)
 	nx.draw_networkx_labels(sg, pos, font_size=4)
-	plt.savefig('Subgraph_'+str(i)+'_blob.png', dpi=150)
+	plt.savefig('Subgraph_'+str(i)+'_bloob.png', dpi=150)
 	plt.close()
 
 
 print('Total cost of the solution is: ', total_cost)
-print('-----Checking using built in functions of scipy------')
+print('-----Checking using built in functions of networkx------')
 
-from scipy.sparse import csr_matrix
-from scipy.sparse.csgraph import minimum_spanning_tree
+G2 = nx.Graph()
+i = 1
+for row in D:
+	j=1
+	for item in row:
+		G2.add_edge(i, j, weight=item)
+		j+=1
+	i+=1
 
-X = csr_matrix(D)
-Tcsr = minimum_spanning_tree(X)
-newD = Tcsr.toarray()
+T=nx.minimum_spanning_tree(G2)
 
-edgesCheck = []
-nodesCheck = []
-for i in range(config.m):
-	nodesCheck.append(i)
-	for j in range(config.m):
-		if newD[i][j] > 0:
-			edgesCheck.append((i, j, newD[i][j]))
-
-MSTCheck = nx.Graph()
-MSTCheck.add_nodes_from(nodesCheck)
-for node1, node2, weight in edgesCheck:
-	MSTCheck.add_edge(node1, node2, weight=weight)
-
-# Remove the k-1 edges with largest weights in the MST
+edges2 = list(T.edges(data=True))
 for i in range(config.k-1):
-	edge_remove = max(edgesCheck, key=lambda t: t[2])
-	edgesCheck.remove(edge_remove)
-	MSTCheck.remove_edge(edge_remove[0], edge_remove[1])
+	edge_remove = max(edges2, key=lambda t: t[2]['weight'])
+	edges2.remove(edge_remove)
+	T.remove_edge(edge_remove[0], edge_remove[1])
 
 # Extracting subgraphs from the MST - k-1 edges with largest weights
-sub_graphsCheck = (MSTCheck.subgraph(c) for c in nx.connected_components(MSTCheck))
+sub_graphs = (T.subgraph(c) for c in nx.connected_components(T))
 
 # Printing the result and the graphs
-for i, sg in enumerate(sub_graphsCheck):
+for i, sg in enumerate(sub_graphs):
 	print("subgraph {} has {} nodes".format(i, sg.number_of_nodes()))
 	print("\tNodes:", sg.nodes(data=False))
 	print("\tEdges:", sg.edges())
-
-
